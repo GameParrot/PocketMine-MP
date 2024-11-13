@@ -865,6 +865,29 @@ class Player extends Human implements CommandSender, ChunkListener, IPlayer{
 		Timings::$playerChunkSend->stopTiming();
 	}
 
+	/**
+	 * Checks if the player is currently on the ground. This is more accurate than {@link Player::isOnGround()} but slower.
+	 */
+	public function isActuallyOnGround() : bool{
+		$bb = $this->boundingBox->expandedCopy(0, 0.001, 0);
+		$maxY = (int) floor($this->location->y);
+		$minY = $maxY - 1;
+		$floorMinX = (int) floor($bb->minX);
+		$floorMinZ = (int) floor($bb->minZ);
+		$floorMaxX = (int) floor($bb->maxX);
+		$floorMaxZ = (int) floor($bb->maxZ);
+		for ($x = $floorMinX ; $x <= $floorMaxX ; $x++) {
+			for ($y = $minY ; $y <= $maxY ; $y++) {
+				for ($z = $floorMinZ ; $z <= $floorMaxZ ; $z++) {
+					if ($this->getWorld()->getBlockAt($x, $y, $z)->collidesWithBB($bb)) {
+						return true;
+					}
+				}
+			}
+		}
+		return false;
+	}
+
 	private function recheckBroadcastPermissions() : void{
 		foreach([
 			DefaultPermissionNames::BROADCAST_ADMIN => Server::BROADCAST_CHANNEL_ADMINISTRATIVE,
