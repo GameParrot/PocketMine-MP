@@ -876,10 +876,10 @@ class Player extends Human implements CommandSender, ChunkListener, IPlayer{
 		$floorMinZ = (int) floor($bb->minZ);
 		$floorMaxX = (int) floor($bb->maxX);
 		$floorMaxZ = (int) floor($bb->maxZ);
-		for ($x = $floorMinX ; $x <= $floorMaxX ; $x++) {
-			for ($y = $minY ; $y <= $maxY ; $y++) {
-				for ($z = $floorMinZ ; $z <= $floorMaxZ ; $z++) {
-					if ($this->getWorld()->getBlockAt($x, $y, $z)->collidesWithBB($bb)) {
+		for ($x = $floorMinX ; $x <= $floorMaxX ; $x++){
+			for ($y = $minY ; $y <= $maxY ; $y++){
+				for ($z = $floorMinZ ; $z <= $floorMaxZ ; $z++){
+					if ($this->getWorld()->getBlockAt($x, $y, $z)->collidesWithBB($bb)){
 						return true;
 					}
 				}
