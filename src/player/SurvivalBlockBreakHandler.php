@@ -79,14 +79,14 @@ final class SurvivalBlockBreakHandler{
 
 			$haste = $this->player->getEffects()->get(VanillaEffects::HASTE());
 			if ($haste !== null){
-				$amplifier = $haste->getAmplifier() + 1;
-				$progressPerTick *= (1 + 0.2 * $amplifier) * (1.2 ** $amplifier);
+				$hasteLevel = $haste->getEffectLevel();
+				$progressPerTick *= (1 + 0.2 * $hasteLevel) * (1.2 ** $hasteLevel);
 			}
 
 			$miningFatigue = $this->player->getEffects()->get(VanillaEffects::MINING_FATIGUE());
 			if ($miningFatigue !== null){
-				$amplifier = $miningFatigue->getAmplifier() + 1;
-				$progressPerTick *= 0.21 ** $amplifier;
+				$miningFatigueLevel = $miningFatigue->getEffectLevel();
+				$progressPerTick *= 0.21 ** $miningFatigueLevel;
 			}
 
 			return $progressPerTick;
