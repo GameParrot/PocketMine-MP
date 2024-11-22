@@ -869,7 +869,7 @@ class Player extends Human implements CommandSender, ChunkListener, IPlayer{
 	 * Checks if the player is currently on the ground. This is more accurate than {@link Player::isOnGround()} but slower.
 	 */
 	public function isActuallyOnGround() : bool{
-		$bb = $this->boundingBox->expandedCopy(0, 0.001, 0);
+		$bb = $this->boundingBox->expandedCopy(-0.001, 0.001, -0.001);
 		$maxY = (int) floor($this->location->y);
 		$minY = $maxY - 1;
 		$floorMinX = (int) floor($bb->minX);
