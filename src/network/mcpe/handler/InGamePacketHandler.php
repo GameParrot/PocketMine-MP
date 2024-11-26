@@ -90,6 +90,7 @@ use pocketmine\network\mcpe\protocol\types\inventory\ContainerIds;
 use pocketmine\network\mcpe\protocol\types\inventory\MismatchTransactionData;
 use pocketmine\network\mcpe\protocol\types\inventory\NetworkInventoryAction;
 use pocketmine\network\mcpe\protocol\types\inventory\NormalTransactionData;
+use pocketmine\network\mcpe\protocol\types\inventory\PredictedResult;
 use pocketmine\network\mcpe\protocol\types\inventory\ReleaseItemTransactionData;
 use pocketmine\network\mcpe\protocol\types\inventory\stackrequest\ItemStackRequest;
 use pocketmine\network\mcpe\protocol\types\inventory\stackresponse\ItemStackResponse;
@@ -479,7 +480,8 @@ class InGamePacketHandler extends PacketHandler{
 					microtime(true) - $this->lastRightClickTime < 0.1 && //100ms
 					$this->lastRightClickData->getPlayerPosition()->distanceSquared($data->getPlayerPosition()) < 0.00001 &&
 					$this->lastRightClickData->getBlockPosition()->equals($data->getBlockPosition()) &&
-					$this->lastRightClickData->getClickPosition()->distanceSquared($clickPos) < 0.00001 //signature spam bug has 0 distance, but allow some error
+					$this->lastRightClickData->getClickPosition()->distanceSquared($clickPos) < 0.00001 && //signature spam bug has 0 distance, but allow some error
+					$data->getClientInteractPrediction() === PredictedResult::FAILURE
 				);
 				//get rid of continued spam if the player clicks and holds right-click
 				$this->lastRightClickData = $data;
@@ -493,7 +495,7 @@ class InGamePacketHandler extends PacketHandler{
 
 				$blockPos = $data->getBlockPosition();
 				$vBlockPos = new Vector3($blockPos->getX(), $blockPos->getY(), $blockPos->getZ());
-				if(!$this->player->interactBlock($vBlockPos, $data->getFace(), $clickPos)){
+				if(!$this->player->interactBlock($vBlockPos, $data->getFace(), $clickPos) && $data->getClientInteractPrediction() !== PredictedResult::FAILURE){
 					$this->onFailedBlockAction($vBlockPos, $data->getFace());
 				}
 				return true;
